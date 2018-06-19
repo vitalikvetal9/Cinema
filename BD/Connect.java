@@ -163,7 +163,8 @@ public class Connect {
 		String today = df.format(d);
 		try {
 			st = c.createStatement();
-			String sql = "SELECT \"name\" FROM \"movies\" WHERE \"premiere_date\" + integer'30' > '" + today + "';";
+			String sql = "SELECT \"name\" FROM \"movies\"WHERE \"movieid\" IN( SELECT \"movieid\" FROM \"session\""
+					+ " WHERE \"date\" > '" + today + "');";
 			ResultSet rs = st.executeQuery(sql);
 			while (rs.next()) {
 				System.out.println(rs.getString("name"));
@@ -702,6 +703,8 @@ public class Connect {
 	}
 
 	public void addSession(String date, String session_begin, String movieName, int hall_id) throws Exception {
+		if (movieName.equals("Месники"))
+			movieName = "Месники: Війна нескінченності";
 		if (hall_id < 1 || hall_id > 3)
 			throw new NullPointerException("No such hall in our cinema");
 		if (!checkDate(date))
@@ -1161,11 +1164,15 @@ public class Connect {
 
 	public String getAllDates(final String movieName) {
 		String res = "";
+		DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+		Date dt = new Date();
+		String currDate = f.format(dt);
 		Statement st = null;
 		try {
 			st = c.createStatement();
-			String sql = "SELECT DISTINCT \"date\" FROM \"session\" WHERE \"movieid\" IN("
-					+ "SELECT \"movieid\" FROM \"movies\" WHERE \"name\" = '" + movieName + "');";
+			String sql = "SELECT DISTINCT \"date\" FROM \"session\" WHERE \"date\" > '" + currDate
+					+ "' AND \"movieid\" IN(" + "SELECT \"movieid\" FROM \"movies\" WHERE \"name\" = '" + movieName
+					+ "');";
 			ResultSet rs = st.executeQuery(sql);
 			while (rs.next())
 				res += rs.getString("date") + ",";

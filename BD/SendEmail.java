@@ -104,25 +104,20 @@ public class SendEmail {
 			throws Exception {
 		PDFDocument pdfDoc = new PDFDocument();
 		PDFPage newPage = pdfDoc.createPage(new PageFormat());
-
-		// Draw to the page
 		Graphics2D g2d = newPage.createGraphics();
-		BufferedImage image = ImageIO.read(new File("img/ticket.jpg"));
-		//g2d.drawImage(image, 80, 120, null);
 		g2d.setFont(PDFGraphics.COURIER.deriveFont(14f));
 		g2d.drawString("Наше кіно", 450, 100);
 		g2d.setFont(PDFGraphics.HELVETICA.deriveFont(24f));
 		g2d.drawString(movie, 100, 350);
-		g2d.drawString(ses_date, 100, 400);
-		g2d.drawString(ses_time, 100, 450);
+		g2d.drawString("Дата : " + ses_date, 100, 400);
+		g2d.drawString("Час - " + ses_time, 100, 450);
 		g2d.drawString("Зал №" + hall, 100, 500);
-		g2d.drawString("Штрих-код - " + ticketID, 100, 550);
+		g2d.drawString("Штрих-код - " + ticketID, 100, 700);
 		g2d.drawString(item.split(", ")[0], 100, 600);
 		g2d.drawString(item.split(", ")[1], 100, 650);
-		g2d.drawString(item.split(", ")[2], 100, 700);
+		g2d.drawString(item.split(", ")[2], 100, 550);
 		g2d.setFont(PDFGraphics.HELVETICA.deriveFont(12f));
 		g2d.drawString("Роздрукуйте даний квиток та покажіть його контролеру при вході в зал", 75, 750);
-		// Add the page to the document and save it
 		pdfDoc.addPage(newPage);
 		pdfDoc.saveDocument("output.pdf");
 	}
